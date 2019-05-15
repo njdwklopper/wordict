@@ -1,14 +1,8 @@
-# JSON Dictionary and score creator
-# Dictionary from https://github.com/dwyl
-# Scores from https://github.com/dariusk/corpora
-
+# Generate Word Dictionary
 import json
 import urllib.request
 
-DICTIONARY_URL = "https://raw.githubusercontent.com/dwyl/english-words/master/words_dictionary.json"
-SCRABBLE_SCORE_URL = "https://raw.githubusercontent.com/dariusk/corpora/master/data/games/scrabble.json"
-MINIMUM_WORD_LENGTH = 3
-MAXIMUM_WORD_LENGTH = 6
+from constants import *
 
 list_shrunk_words = []
 
@@ -23,6 +17,7 @@ with urllib.request.urlopen(DICTIONARY_URL) as url:
 list_shrunk_words = list(dict.fromkeys(list_shrunk_words))
 print(list_shrunk_words)
 
+# Create text file from list
 file_list_shrunk_words = open("output/words.txt", "w")
 with urllib.request.urlopen(DICTIONARY_URL) as url:
     dict_word_data = json.loads(url.read().decode())
@@ -30,6 +25,7 @@ with urllib.request.urlopen(DICTIONARY_URL) as url:
         file_list_shrunk_words.write(line + "\n")
     file_list_shrunk_words.close()
 
+# Get/map scrabble scores for letters
 dict_letter_scores = {}
 with urllib.request.urlopen(SCRABBLE_SCORE_URL) as url:
     dict_scores_data = json.loads(url.read().decode())
@@ -38,6 +34,7 @@ with urllib.request.urlopen(SCRABBLE_SCORE_URL) as url:
             dict_letter_scores[letter] = list_data['points']
     print(dict_letter_scores)
 
+# Create Words json dictionary with complete score (work in progress to add other data)
 dict_gen_word_data = {'words': []}
 for word in list_shrunk_words:
     sum_score = 0
@@ -49,7 +46,6 @@ for word in list_shrunk_words:
         'word': word,
         'score': sum_score
     })
-
 print(dict_gen_word_data)
 
 with open('output/word_data.json', 'w') as word_data:
