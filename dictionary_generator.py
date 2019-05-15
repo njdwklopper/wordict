@@ -10,30 +10,47 @@ SCRABBLE_SCORE_URL = "https://raw.githubusercontent.com/dariusk/corpora/master/d
 MINIMUM_WORD_LENGTH = 3
 MAXIMUM_WORD_LENGTH = 6
 
-words = open("output/words.txt", "w")
+list_shrunk_words = []
+
+# Create Word list with minimum and maximum length
 with urllib.request.urlopen(DICTIONARY_URL) as url:
-    _word_data_ = json.loads(url.read().decode())
-    for line in _word_data_:
+    dict_word_data = json.loads(url.read().decode())
+    for line in dict_word_data:
         if MINIMUM_WORD_LENGTH <= len(line) <= MAXIMUM_WORD_LENGTH:
-            words.write(line + "\n")
-    words.close()
+            list_shrunk_words.append(line)
 
-scores = {}
+# Remove duplicates:
+list_shrunk_words = list(dict.fromkeys(list_shrunk_words))
+print(list_shrunk_words)
+
+file_list_shrunk_words = open("output/words.txt", "w")
+with urllib.request.urlopen(DICTIONARY_URL) as url:
+    dict_word_data = json.loads(url.read().decode())
+    for line in list_shrunk_words:
+        file_list_shrunk_words.write(line + "\n")
+    file_list_shrunk_words.close()
+
+dict_letter_scores = {}
 with urllib.request.urlopen(SCRABBLE_SCORE_URL) as url:
-    _score_data_ = json.loads(url.read().decode())
-    keylist = _score_data_['letters'].keys()
-    for key in keylist:
-        print(key)
-    # for line in _score_data_['letters']:
-    #     print("%s: %d" % (line, _score_data_[line]))
+    dict_scores_data = json.loads(url.read().decode())
+    for letter, list_data in dict_scores_data['letters'].items():
+        if 'points' in dict_scores_data['letters'][letter]:
+            dict_letter_scores[letter] = list_data['points']
+    print(dict_letter_scores)
 
-_new_dictionary_data_ = {'words': []}
-for word in words:
-    _new_dictionary_data_['word'].append({
-        'name': word,
-        'score': '1',
-        'from': 'Nebraska'
+dict_gen_word_data = {'words': []}
+for word in list_shrunk_words:
+    sum_score = 0
+    for letter in word:
+        for score in dict_letter_scores.items():
+            if letter in score:
+                sum_score = sum_score + score[1]
+    dict_gen_word_data['words'].append({
+        'word': word,
+        'score': sum_score
     })
 
+print(dict_gen_word_data)
+
 with open('output/word_data.json', 'w') as word_data:
-    json.dump(_new_dictionary_data_, word_data)
+    json.dump(dict_gen_word_data, word_data)
