@@ -18,7 +18,7 @@ list_shrunk_words = list(dict.fromkeys(list_shrunk_words))
 print(list_shrunk_words)
 
 # Create text file from list
-file_list_shrunk_words = open("output/words.txt", "w")
+file_list_shrunk_words = open("dictionary/words.txt", "w")
 with urllib.request.urlopen(DICTIONARY_URL) as url:
     dict_word_data = json.loads(url.read().decode())
     for line in list_shrunk_words:
@@ -48,5 +48,5 @@ for word in list_shrunk_words:
     })
 print(dict_gen_word_data)
 
-with open('output/word_data.json', 'w') as word_data:
+with open('dictionary/word_data.json', 'w') as word_data:
     json.dump(dict_gen_word_data, word_data)

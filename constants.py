@@ -1,5 +1,5 @@
 # JSON Dictionary and score creator
-# Dictionary from https://github.com/dwyl
+# (Collins) Dictionary from https://github.com/dwyl
 # Scores from https://github.com/dariusk/corpora
 
 DICTIONARY_URL = "https://raw.githubusercontent.com/dwyl/english-words/master/words_dictionary.json"

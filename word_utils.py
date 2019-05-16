@@ -6,7 +6,7 @@ from constants import MINIMUM_WORD_LENGTH, MAXIMUM_WORD_LENGTH
 
 
 def get_dict_words_by_length(tot):
-    file_list_words = open("output/word_data.json", "r")
+    file_list_words = open("dictionary/word_data.json", "r")
     dict_words_data = json.loads(file_list_words.read())
     list_words = []
     for word in dict_words_data['words']:
@@ -17,7 +17,7 @@ def get_dict_words_by_length(tot):
 
 # Create list that only contains @total characters per word
 def get_list_words_by_length(total):
-    file_list_words = open("output/word_data.json", "r")
+    file_list_words = open("dictionary/word_data.json", "r")
     dict_words_data = json.loads(file_list_words.read())
     list_words = []
     for word in dict_words_data['words']:
