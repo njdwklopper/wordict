@@ -35,17 +35,14 @@ with urllib.request.urlopen(SCRABBLE_SCORE_URL) as url:
     print(dict_letter_scores)
 
 # Create Words json dictionary with complete score (work in progress to add other data)
-dict_gen_word_data = {'words': []}
+dict_gen_word_data = {}
 for word in list_shrunk_words:
     sum_score = 0
     for letter in word:
         for score in dict_letter_scores.items():
             if letter in score:
                 sum_score = sum_score + score[1]
-    dict_gen_word_data['words'].append({
-        'word': word,
-        'score': sum_score
-    })
+    dict_gen_word_data[word] = {"score": sum_score}
 print(dict_gen_word_data)
 
 with open('dictionary/word_data.json', 'w') as word_data:
